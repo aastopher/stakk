@@ -1,13 +1,8 @@
 ## Description
 
-**stack**
+**Stack info**
 
-Stack is designed to stack functions into a register, this stack can be consumed by a stack of modular utilities.
-
-
-**info**
-
-This package is intended to create an lower barrier for entry for configuring, command line interfaces, benchmarking tasks, worker agents
+Stack is designed to stack functions into a register, this registered stack is designed to be consumed by a stack of modular utilities. This pattern is intended to facilitate a lower barrier for entry to configuring command line interfaces, benchmarking tasks, and managing threaded agents.
 ***
 
 ## Quick Start:
@@ -16,7 +11,7 @@ This package is intended to create an lower barrier for entry for configuring, c
 
 </br>
 
-Using the register decorator `@stack.register` on your functions will register it with stack `meta_handler`. Stored functions are available across tools. This registry is intended to be used by logger and cli utilities.
+Using the register decorator `@stack.register` on your functions will register it with stack `meta_handler`. Stored functions are available across tools.
 
 ```python
 import stack
