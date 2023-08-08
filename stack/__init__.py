@@ -15,7 +15,7 @@ def register(func):
     return func
 
 
-def cli(desc = None, logs = False):
+def cli(desc = None):
     '''init cli and register to store
     
     :param desc: description of the CLI
