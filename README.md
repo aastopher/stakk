@@ -4,7 +4,7 @@
 
 ## Description
 
-Stack is designed to stack functions into a register, this registered stack is designed to be consumed by a stack of modular utilities. This pattern is intended to facilitate a lower barrier for entry to configuring command line interfaces, benchmarking tasks, and managing threaded agents.
+Stack is designed to stack functions into a register, this registered stack is designed to be consumed by a stack of modular utilities. This pattern is intended to facilitate a lower barrier for entry to configure command line interfaces, benchmark tasks, and manage threaded agents.
 ***
 
 ## Quick Start:
