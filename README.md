@@ -1,3 +1,7 @@
+[![Documentation Status](https://readthedocs.org/projects/stackdocs/badge/?version=latest)](https://stackdocs.readthedocs.io/en/latest/?badge=latest)
+[![codecov](https://codecov.io/gh/aastopher/stack/branch/main/graph/badge.svg?token=6E9OZ92IER)](https://codecov.io/gh/aastopher/stack)
+[![DeepSource](https://app.deepsource.com/gh/aastopher/stack.svg/?label=active+issues&show_trend=true&token=Cb1BDZodMpRy6GmIyFkpYUPQ)](https://app.deepsource.com/gh/aastopher/stack/?ref=repository-badge)
+
 ## Description
 
 Stack is designed to stack functions into a register, this registered stack is designed to be consumed by a stack of modular utilities. This pattern is intended to facilitate a lower barrier for entry to configuring command line interfaces, benchmarking tasks, and managing threaded agents.
