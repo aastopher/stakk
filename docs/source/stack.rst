@@ -8,12 +8,12 @@ Stack is designed to stack functions into a register, the registered stack is de
 .. automodule:: sutools
    :members:
 
-store
+stack
 ^^^^^
 
-stack ``store`` instance is a global instance of the ``meta_handler.Bucket`` class. This instance is used to store functions and utility objects, for access across utilities.
+``stack`` instance is a global instance of the ``meta_handler.Bucket`` class. This instance is used to stack functions and utility objects, for access across utilities.
 
 benchy
 ^^^^^^^
 
-stack ``benchy`` instance is a global instance of the ``bench_handler.Benchy`` class. This instance is used as a decorator to collect benchmarking stats for selected functions.
+``benchy`` instance is a global instance of the ``bench_handler.Benchy`` class. This instance is used as a decorator to collect benchmarking stats for selected functions.

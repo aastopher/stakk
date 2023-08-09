@@ -6,21 +6,22 @@ from stack import bench_handler
 
 def test_benchy_and_register():
     benchy = bench_handler.Benchy()
+    stack_name = 'test'
 
-    @stack.register
+    @stack.register(stack_name)
     @benchy
     def func_add(x: int, y: int) -> int:
         """this is a test function"""
         return x + y
 
     @benchy
-    @stack.register
+    @stack.register(stack_name)
     def func_minus(x: int, y: int) -> int:
         """this is a test function"""
         return x - y
     
     @benchy
-    @stack.register
+    @stack.register(stack_name)
     def func_data(data: list) -> list:
         """this is a test function"""
         return data
@@ -36,10 +37,10 @@ def test_benchy_and_register():
     assert "func_data" in benchy.report
 
     # assert that functions were registered
-    assert "func_add" in stack.store.funcs
-    assert "func_minus" in stack.store.funcs
-    assert "func_data" in stack.store.funcs
+    assert "func_add" in stack.stack.funcs
+    assert "func_minus" in stack.stack.funcs
+    assert "func_data" in stack.stack.funcs
 
     # clear global registers
     stack.benchy.report = {}
-    stack.store.funcs = {}
+    stack.stack.funcs = {}

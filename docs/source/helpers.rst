@@ -11,7 +11,7 @@ helper classes
    :undoc-members:
    :show-inheritance:
 
-.. autoclass:: stack.meta_handler.Store
+.. autoclass:: stack.meta_handler.Stack
    :members:
    :undoc-members:
    :show-inheritance:

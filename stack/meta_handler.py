@@ -1,20 +1,23 @@
 import inspect
+import asyncio
 
 
-class Store:
+class Stack:
     """internal object for storing function dictionary"""
 
     def __init__(self):
         self.funcs = {}  # init function registration dictionary
-        self.cli = None  # init cli object store
+        self.cli = None  # init cli object stack
+        self.stacks = set()
 
-    def add_func(self, func):
+    def add_func(self, stack: str, func):
         """registers a function to the function dictionary"""
         names = inspect.getfullargspec(func).args  # collect arg names
         types = inspect.getfullargspec(func).annotations  # collect types of args
         defaults = self._get_defaults(func)
         desc = None
         variadic = False
+        self.stacks.add(stack)
 
         # if docstring exists and no description defined set desc
         if func.__doc__:
@@ -36,14 +39,19 @@ class Store:
                     'types':types, 
                     'defaults':defaults, 
                     'desc':desc, 
-                    'variadic':variadic}
+                    'variadic':variadic,
+                    'stack':stack}
         
-        # update function in store
+        # update function in stack
         self.funcs.update({func.__name__: func_meta})
 
     def add_cli(self, cli_obj):
-        """adds a cli object to the store"""
+        """adds a cli object to the stack"""
         self.cli = cli_obj
+
+    def get_stack(self, stack: str) -> dict:
+        """retrieve functions that belong to the specified stack"""
+        return {func_name: func_meta for func_name, func_meta in self.funcs.items() if func_meta['stack'] == stack}
 
     @staticmethod
     def _get_defaults(func):

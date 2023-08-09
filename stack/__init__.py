@@ -1,29 +1,32 @@
 from stack import cli_handler, meta_handler, bench_handler
 
-# init store
-store = meta_handler.Store()
+# init stack
+stack = meta_handler.Stack()
 benchy = bench_handler.Benchy()
 
 
-def register(func):
-    '''register a function to the store
+def register(stack_name: str):
+    '''register a function to the stack with a stack name
     
-    :param func: the function to register
+    :param stack_name: name of stack to register function
     '''
-    original_func = getattr(func, "__wrapped__", func)
-    store.add_func(original_func)
-    return func
+    def decorator(func):
+        original_func = getattr(func, "__wrapped__", func)
+        stack.add_func(stack_name, original_func)
+        return func
+    return decorator
 
 
-def cli(desc = None):
-    '''init cli and register to store
+def cli(stack_name: str, desc : str = None):
+    '''init cli and register to stack
     
+    :param stack_name: name of stack to register CLI
     :param desc: description of the CLI
     '''
 
     cli_obj = cli_handler.CLI(desc)
 
-    cli_obj.add_funcs(store.funcs)
+    cli_obj.add_funcs(stack.get_stack(stack_name))
     cli_obj.parse()
-    store.add_cli(cli_obj)
+    stack.add_cli(cli_obj)
     return cli_obj

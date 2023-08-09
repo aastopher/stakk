@@ -10,12 +10,13 @@ def test_cli_desc(capsys, monkeypatch):
     ) -> str:
         pass # pass since we are only testing the function description
     
-    store = meta_handler.Store()
-    store.add_func(func_test)
+    stack = meta_handler.Stack()
+    stack_name = 'test'
+    stack.add_func(stack_name, func_test)
 
     expected = "Test CLI"
     cli_obj = cli_handler.CLI(expected)
-    cli_obj.add_funcs(store.funcs)
+    cli_obj.add_funcs(stack.get_stack(stack_name))
 
     monkeypatch.setattr(sys, "exit", lambda x: None)
 
@@ -30,7 +31,7 @@ def test_cli_desc(capsys, monkeypatch):
 
 def test_cli_add_funcs(monkeypatch):
     def func_test(x: int, y: int, c: str = "-") -> int:
-        pass # pass since we are only testing the function is added to store
+        pass # pass since we are only testing the function is added to stack
 
     expected = func_test.__name__
 
@@ -40,9 +41,10 @@ def test_cli_add_funcs(monkeypatch):
         "stack.cli_handler.argparse.ArgumentParser.parse_args", return_value=namespace
     ):
         cli_obj = cli_handler.CLI("description")
-        store = meta_handler.Store()
-        store.add_func(func_test)
-        cli_obj.add_funcs(store.funcs)
+        stack = meta_handler.Stack()
+        stack_name = 'test'
+        stack.add_func(stack_name, func_test)
+        cli_obj.add_funcs(stack.get_stack(stack_name))
 
         monkeypatch.setattr(sys, "exit", lambda *args: None)
 
@@ -55,11 +57,12 @@ def test_async_func(capsys, monkeypatch):
         await asyncio.sleep(0.1)
         print('pass')
 
-    store = meta_handler.Store()
-    store.add_func(func_test)
+    stack = meta_handler.Stack()
+    stack_name = 'test'
+    stack.add_func(stack_name, func_test)
 
     cli_obj = cli_handler.CLI("description")
-    cli_obj.add_funcs(store.funcs)
+    cli_obj.add_funcs(stack.get_stack(stack_name))
 
     monkeypatch.setattr(sys, "exit", lambda *args: None)
 
@@ -79,11 +82,12 @@ def test_variadic_func(capsys, monkeypatch):
     def func_test(*args, **kwargs):
         print('pass')
 
-    store = meta_handler.Store()
-    store.add_func(func_test)
+    stack = meta_handler.Stack()
+    stack_name = 'test'
+    stack.add_func(stack_name, func_test)
 
     cli_obj = cli_handler.CLI("description")
-    cli_obj.add_funcs(store.funcs)
+    cli_obj.add_funcs(stack.get_stack(stack_name))
 
     monkeypatch.setattr(sys, "exit", lambda *args: None)
 

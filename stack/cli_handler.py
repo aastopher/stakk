@@ -4,7 +4,7 @@ import inspect, os, argparse, sys, asyncio
 class CLI:
     """object designed for swift module CLI configuration"""
 
-    def __init__(self, desc):
+    def __init__(self, desc: str):
         """init top-level parser"""
 
         # split call source into dir and file name
