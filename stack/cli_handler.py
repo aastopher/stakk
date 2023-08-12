@@ -22,7 +22,8 @@ class CLI:
         self.subparsers = self.parser.add_subparsers(title="commands", dest="command")
         self.func_dict = {}  # init empty func dict
         self.input = None
-    
+
+
     def add_funcs(self, func_dict):
         """add registered functions to the cli"""
 
@@ -53,26 +54,26 @@ class CLI:
             params = []
             for name, param in signature.parameters.items():
                 
-                # Check if the annotation is a list (for choices or type hint)
+                # Check if the annotation is an iterable of strings
                 choices = None
                 if is_iterable_of_strings(param.annotation):
-                    # This is a list used for choices
                     choices = param.annotation
-                    arg_type = str 
-                    annotation_name = next(key for key, value in func_dict[func_name]['func'].__annotations__.items() if value == choices)
+                    arg_type = str
                 else:
                     arg_type = param.annotation
-                    annotation_name = arg_type.__name__
 
                 # check if function contains annotations
                 if param.annotation != inspect.Parameter.empty:
                     # if default arg exists display in docs
                     if param.default != inspect.Parameter.empty:
-                        params.append(
-                            f"{name}: {annotation_name} = {param.default!r}"
-                        )
+                        try:
+                            params.append(
+                                f"{name}: {arg_type.__name__} = {param.default!r}"
+                            )
+                        except:
+                            raise ValueError('choice list is not an iterable of strings')
                     else:
-                        params.append(f"{name}: {annotation_name}")
+                        params.append(f"{name}: {arg_type.__name__}")
                 else:
                     if param.default != inspect.Parameter.empty:
                         params.append(f"{name} = {param.default!r}")
@@ -102,9 +103,13 @@ class CLI:
             abbrevs = set()
             for name, arg_type in zip(names, arg_types):
                 choices = None  # Reset choices at the beginning of each iteration
-                if name in types and is_iterable_of_strings(types[name]):
+                if is_iterable_of_strings(types.get(name, None)):
                     choices = types[name]
                     arg_type = str
+
+                help_string = str(arg_type) if arg_type is not None else None
+                if choices:
+                    help_string += f", choices: {', '.join(choices)}"
 
                 if name in defaults:
                     # default abbreviation is the first 2 characters
@@ -114,15 +119,11 @@ class CLI:
                         short_name = name[-1]
                     abbrevs.add(short_name)
 
-                    help_string = f"default: {defaults[name]}"
-                    if choices:
-                        help_string += f", choices: ({', '.join(choices)})"
-
                     try:
                         subp.add_argument(
                             f"-{short_name}",
                             f"--{name}",
-                            metavar=str(arg_type) if arg_type is not None else None,
+                            metavar=name if choices else None,
                             type=arg_type,
                             default=defaults[name],
                             help=help_string,
@@ -131,17 +132,13 @@ class CLI:
                     except argparse.ArgumentError:
                         subp.add_argument(
                             f"--{name}",
-                            metavar=str(arg_type) if arg_type is not None else None,
+                            metavar=name if choices else None,
                             type=arg_type,
                             default=defaults[name],
                             help=help_string,
                             choices=choices if choices else None
                         )
                 else:
-                    help_string = str(arg_type) if arg_type is not None else None
-                    if choices:
-                        help_string += f", choices: ({', '.join(choices)})"
-
                     # if variadic allow any number of args
                     if items['variadic']:
                         subp.add_argument(
@@ -152,7 +149,7 @@ class CLI:
                     else:
                         subp.add_argument(
                             name, 
-                            metavar=annotation_name if choices else None, 
+                            metavar=name,
                             type=arg_type, 
                             help=help_string,
                             choices=choices if choices else None
@@ -162,7 +159,7 @@ class CLI:
             subp.add_argument(
                 "-h", "--help", action="help", help="Show this help message and exit."
             )
-
+            
 
     def parse(self):
         """initialize parsing args"""
