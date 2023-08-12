@@ -18,11 +18,11 @@ def test_add_func():
     expected = ["func_test1", "func_test2"]
     # Create a new meta_handler.Stack object
     stack = meta_handler.Stack()
-    stack_name = 'test'
+    stack_id = 'test'
 
     # Add test functions to the stack
-    stack.add_func(stack_name, func_test1)
-    stack.add_func(stack_name, func_test2)
+    stack.add_func(stack_id, func_test1)
+    stack.add_func(stack_id, func_test2)
 
     # Assert that the function was added correctly
     assert all(item in stack.funcs for item in expected)

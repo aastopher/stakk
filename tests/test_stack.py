@@ -21,9 +21,9 @@ def test_register():
 
         return defaults
 
-    stack_name = 'test'
+    stack_id = 'test'
 
-    @stack.register(stack_name)
+    @stack.register(stack_id)
     def func_test(x: int, y: int) -> int:
         """this is a test function"""
         return x + y
@@ -73,9 +73,9 @@ def test_register_variadic():
 
         return names, types, defaults, desc, variadic
     
-    stack_name = 'test'
+    stack_id = 'test'
 
-    @stack.register(stack_name)
+    @stack.register(stack_id)
     def func_test(*args, **kwargs):
         """this is a test function"""
         return args, kwargs
@@ -99,7 +99,7 @@ def test_register_variadic():
 def test_cli(monkeypatch):
     # patch the input namespace with the desired command
     namespace = argparse.Namespace(command="", help=True)
-    stack_name = 'test'
+    stack_id = 'test'
 
     with patch(
         "stack.cli_handler.argparse.ArgumentParser.parse_args", return_value=namespace
@@ -107,6 +107,6 @@ def test_cli(monkeypatch):
         # patch the sys.exit function so it doesn't exit the interpreter during the test
         monkeypatch.setattr(sys, "exit", lambda *args: None)
 
-        stack.cli(stack_name)
+        stack.cli(stack_id)
 
     assert stack.stack.cli is not None

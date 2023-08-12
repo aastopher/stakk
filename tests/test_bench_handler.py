@@ -6,22 +6,22 @@ from stack import bench_handler
 
 def test_benchy_and_register():
     benchy = bench_handler.Benchy()
-    stack_name = 'test'
+    stack_id = 'test'
 
-    @stack.register(stack_name)
+    @stack.register(stack_id)
     @benchy
     def func_add(x: int, y: int) -> int:
         """this is a test function"""
         return x + y
 
     @benchy
-    @stack.register(stack_name)
+    @stack.register(stack_id)
     def func_minus(x: int, y: int) -> int:
         """this is a test function"""
         return x - y
     
     @benchy
-    @stack.register(stack_name)
+    @stack.register(stack_id)
     def func_data(data: list) -> list:
         """this is a test function"""
         return data

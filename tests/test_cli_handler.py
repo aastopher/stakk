@@ -11,12 +11,12 @@ def test_cli_desc(capsys, monkeypatch):
         pass # pass since we are only testing the function description
     
     stack = meta_handler.Stack()
-    stack_name = 'test'
-    stack.add_func(stack_name, func_test)
+    stack_id = 'test'
+    stack.add_func(stack_id, func_test)
 
     expected = "Test CLI"
     cli_obj = cli_handler.CLI(expected)
-    cli_obj.add_funcs(stack.get_stack(stack_name))
+    cli_obj.add_funcs(stack.get_stack(stack_id))
 
     monkeypatch.setattr(sys, "exit", lambda x: None)
 
@@ -42,9 +42,9 @@ def test_cli_add_funcs(monkeypatch):
     ):
         cli_obj = cli_handler.CLI("description")
         stack = meta_handler.Stack()
-        stack_name = 'test'
-        stack.add_func(stack_name, func_test)
-        cli_obj.add_funcs(stack.get_stack(stack_name))
+        stack_id = 'test'
+        stack.add_func(stack_id, func_test)
+        cli_obj.add_funcs(stack.get_stack(stack_id))
 
         monkeypatch.setattr(sys, "exit", lambda *args: None)
 
@@ -58,11 +58,11 @@ def test_async_func(capsys, monkeypatch):
         print('pass')
 
     stack = meta_handler.Stack()
-    stack_name = 'test'
-    stack.add_func(stack_name, func_test)
+    stack_id = 'test'
+    stack.add_func(stack_id, func_test)
 
     cli_obj = cli_handler.CLI("description")
-    cli_obj.add_funcs(stack.get_stack(stack_name))
+    cli_obj.add_funcs(stack.get_stack(stack_id))
 
     monkeypatch.setattr(sys, "exit", lambda *args: None)
 
@@ -83,11 +83,11 @@ def test_variadic_func(capsys, monkeypatch):
         print('pass')
 
     stack = meta_handler.Stack()
-    stack_name = 'test'
-    stack.add_func(stack_name, func_test)
+    stack_id = 'test'
+    stack.add_func(stack_id, func_test)
 
     cli_obj = cli_handler.CLI("description")
-    cli_obj.add_funcs(stack.get_stack(stack_name))
+    cli_obj.add_funcs(stack.get_stack(stack_id))
 
     monkeypatch.setattr(sys, "exit", lambda *args: None)
 
