@@ -41,7 +41,7 @@ def test_register():
                                         'variadic':False,
                                         'stack':'test'}}
 
-    assert expected_dict == stack.stack.funcs
+    assert expected_dict == stack.stack.get_stack(stack_id)
 
 
 # Test 2: this should test the register decorator from stack
@@ -90,7 +90,7 @@ def test_register_variadic():
                                         'variadic':variadic,
                                         'stack':'test'}}
 
-    assert expected_dict == stack.stack.funcs
+    assert expected_dict == stack.stack.get_stack(stack_id)
 
 
 # Test 3: this should test the cli from stack

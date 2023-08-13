@@ -25,7 +25,7 @@ def test_add_func():
     stack.add_func(stack_id, func_test2)
 
     # Assert that the function was added correctly
-    assert all(item in stack.funcs for item in expected)
+    assert all(item in stack.get_stack(stack_id) for item in expected)
 
 
 # Define a test function for the add_cli method of the meta_handler.Stack class

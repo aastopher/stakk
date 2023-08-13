@@ -37,9 +37,9 @@ def test_benchy_and_register():
     assert "func_data" in benchy.report
 
     # assert that functions were registered
-    assert "func_add" in stack.stack.funcs
-    assert "func_minus" in stack.stack.funcs
-    assert "func_data" in stack.stack.funcs
+    assert "func_add" in stack.stack.get_stack(stack_id)
+    assert "func_minus" in stack.stack.get_stack(stack_id)
+    assert "func_data" in stack.stack.get_stack(stack_id)
 
     # clear global registers
     stack.benchy.report = {}

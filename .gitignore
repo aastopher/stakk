@@ -12,6 +12,7 @@ coverage.xml
 dev.py
 dev*/
 **.dev/
+requirements_*.txt
 
 # caches
 **/logs
