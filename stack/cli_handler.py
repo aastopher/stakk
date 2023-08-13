@@ -1,10 +1,4 @@
-import inspect, os, argparse, sys, asyncio, ast
-
-
-class SplitListArgs(argparse.Action):
-        """action to coerce the input string into a list"""
-        def __call__(self, parser, namespace, values, option_string=None):
-            setattr(namespace, self.dest, ''.join(values).split(','))
+import inspect, os, argparse, sys, asyncio, re
 
 class CLI:
     """object designed for swift module CLI configuration"""
@@ -42,18 +36,21 @@ class CLI:
         def get_type_from_choices(choices):
             """parse the choice list to infer the type"""
             
-            # If the list is empty, return None
+            # if the list is empty, return None
             if not choices:
                 return None
             
-            # Get the type of the first element
+            # get the type of the first element
             first_type = type(choices[0])
             
-            # Check if all elements are of the same type as the first element
+            # check if all elements are of the same type as the first element
             if all(isinstance(elt, first_type) for elt in choices):
                 return first_type
             else:
                 raise ValueError("all types in the choice list must match.")
+            
+        def type_list(value):
+            return re.split(r'[;,| ]', value)
 
                     
         self.func_dict = func_dict  # assign function dictionary property
@@ -77,18 +74,16 @@ class CLI:
             params = []
             for name, param in signature.parameters.items():
                 
-                # Check if the annotation is an iterable
+                # init choices
                 choices = None
-                action = None 
+
+                # check if the annotation is an iterable
                 if is_iterable(param.annotation) and not isinstance(param.annotation, str):
-                    # choices = param.annotation
-                    # arg_type = str
                     choices = param.annotation
                     inferred_type = get_type_from_choices(param.annotation)
                     arg_type = inferred_type if inferred_type else str
                 elif param.annotation == list:
-                    arg_type = str
-                    action = SplitListArgs
+                    arg_type = type_list
                 else:
                     arg_type = param.annotation
 
@@ -117,7 +112,7 @@ class CLI:
                 if items['desc'] is not None:
                     help_description = items['desc']
 
-            # After gathering all the information about the parameters, add the command
+            # after gathering all the information about the parameters, add the command
             subp = self.subparsers.add_parser(
                 func_name,
                 help=help_description,
@@ -129,11 +124,13 @@ class CLI:
             # create abbreviations for named short name
             abbrevs = set()
             for name, arg_type in zip(names, arg_types):
-                choices = None  # Reset choices at the beginning of each iteration
+                choices = None  # reset choices at the beginning of each iteration
                 if is_iterable(types.get(name, None)) and not isinstance(types.get(name, None), str):
                     choices = types[name]
                     inferred_type = get_type_from_choices(types[name])
                     arg_type = inferred_type if inferred_type else str
+                elif types.get(name, None) == list:
+                    arg_type = type_list
 
                 help_string = ""
                 if arg_type:
@@ -164,7 +161,6 @@ class CLI:
                             default=defaults[name],
                             help=help_string,
                             choices=choices if choices else None,
-                            action=action if action else None
                         )
                     except argparse.ArgumentError:
                         subp.add_argument(
@@ -174,7 +170,6 @@ class CLI:
                             default=defaults[name],
                             help=help_string,
                             choices=choices if choices else None,
-                            action=action if action else None
                         )
                 else:
                     # if variadic allow any number of args
