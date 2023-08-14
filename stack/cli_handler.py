@@ -22,6 +22,10 @@ class CLI:
         self.func_dict = {}  # init empty func dict
         self.input = None
 
+    @staticmethod
+    def type_list(value):
+            return re.split(r'[;,| ]', value)
+
     def add_funcs(self, func_dict):
         """add registered functions to the cli"""
 
@@ -48,9 +52,6 @@ class CLI:
                 return first_type
             else:
                 raise ValueError("all types in the choice list must match.")
-            
-        def type_list(value):
-            return re.split(r'[;,| ]', value)
 
                     
         self.func_dict = func_dict  # assign function dictionary property
@@ -83,7 +84,7 @@ class CLI:
                     inferred_type = get_type_from_choices(param.annotation)
                     arg_type = inferred_type if inferred_type else str
                 elif param.annotation == list:
-                    arg_type = type_list
+                    arg_type = self.type_list
                 else:
                     arg_type = param.annotation
 
@@ -130,7 +131,7 @@ class CLI:
                     inferred_type = get_type_from_choices(types[name])
                     arg_type = inferred_type if inferred_type else str
                 elif types.get(name, None) == list:
-                    arg_type = type_list
+                    arg_type = self.type_list
 
                 help_string = ""
                 if arg_type:

@@ -39,7 +39,7 @@ def test_register():
                                         'defaults':defaults, 
                                         'desc':desc, 
                                         'variadic':False,
-                                        'stack':'test'}}
+                                        'stack':stack_id}}
 
     assert expected_dict == stack.stack.get_stack(stack_id)
 
@@ -88,7 +88,7 @@ def test_register_variadic():
                                         'defaults':defaults, 
                                         'desc':desc, 
                                         'variadic':variadic,
-                                        'stack':'test'}}
+                                        'stack':stack_id}}
 
     assert expected_dict == stack.stack.get_stack(stack_id)
 
