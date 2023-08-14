@@ -30,7 +30,7 @@ class CLI:
 
     @staticmethod
     def choice_type(value, choices):
-        """custom type for argparse for mapping types on provided choices."""
+        """custom type for argparse for checking types on provided choices."""
         for choice in choices:
             if choice == value or str(choice) == str(value):
                 return type(choice)(value)
