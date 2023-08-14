@@ -1,5 +1,4 @@
 import inspect, os, argparse, sys, asyncio, re
-from functools import partial
 
 class CLI:
     """object designed for swift module CLI configuration"""
@@ -30,11 +29,26 @@ class CLI:
 
     @staticmethod
     def choice_type(value, choices):
-        """custom type for argparse for checking types on provided choices."""
+        """custom type for checking types on provided choices."""
         for choice in choices:
             if choice == value or str(choice) == str(value):
                 return type(choice)(value)
         raise argparse.ArgumentTypeError(f"'{value}' is not a valid choice.")
+    
+    @staticmethod
+    def custom_partial(func, **partial_kwargs):
+        """
+        partial function wrapper which retains the original 
+        function's name and doc string.
+        """
+        def wrapped_func(*args, **kwargs):
+            all_kwargs = {**partial_kwargs, **kwargs}
+            return func(*args, **all_kwargs)
+
+        wrapped_func.__name__ = func.__name__
+        wrapped_func.__doc__ = func.__doc__
+        return wrapped_func
+
 
     def add_funcs(self, func_dict):
         """add registered functions to the cli"""
@@ -47,17 +61,6 @@ class CLI:
             except TypeError:
                 return False
             
-        def custom_partial(func, **kwargs):
-            """
-            custom partial function which retains the original 
-            function's name and doc string
-            """
-            partial_func = partial(func, **kwargs)
-            partial_func.__name__ = func.__name__
-            partial_func.__doc__ = func.__doc__
-            return partial_func
-
-             
         self.func_dict = func_dict  # assign function dictionary property
 
         # iterate through registered functions
@@ -85,7 +88,7 @@ class CLI:
                 # check if the annotation is an iterable
                 if is_iterable(param.annotation) and not isinstance(param.annotation, str):
                     choices = param.annotation
-                    arg_type = custom_partial(self.choice_type, choices=choices)
+                    arg_type = self.custom_partial(self.choice_type, choices=choices)
                 elif param.annotation == list:
                     arg_type = self.type_list
                 else:
@@ -131,7 +134,7 @@ class CLI:
                 choices = None  # reset choices at the beginning of each iteration
                 if is_iterable(types.get(name, None)) and not isinstance(types.get(name, None), str):
                     choices = types[name]
-                    arg_type = custom_partial(self.choice_type, choices=types[name])
+                    arg_type = self.custom_partial(self.choice_type, choices=types[name])
                 elif types.get(name, None) == list:
                     arg_type = self.type_list
 

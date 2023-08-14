@@ -198,7 +198,7 @@ def test_list_func(capsys, monkeypatch):
     run_cli_parse({'command': 'list_test', 'test_list': [input]}, expected)
 
 def test_type_list():
-    cli_instance = cli_handler.CLI("description")
+    cli_obj = cli_handler.CLI("description")
     
     test_cases = [
         ("test1,test2;test3|test4 test5", ["test1", "test2", "test3", "test4", "test5"]),
@@ -210,11 +210,11 @@ def test_type_list():
     ]
 
     for input_str, expected_output in test_cases:
-        result = cli_instance.type_list(input_str)
+        result = cli_obj.type_list(input_str)
         assert result == expected_output, f"For input '{input_str}', expected {expected_output} but got {result}"
 
 def test_choice_type():
-    cli_instance = cli_handler.CLI("description")
+    cli_obj = cli_handler.CLI("description")
     
     test_cases = [
         # string choices
@@ -232,13 +232,33 @@ def test_choice_type():
     for input_value, choices, expected_output in test_cases:
         if expected_output is argparse.ArgumentTypeError:
             try:
-                result = cli_instance.choice_type(input_value, choices)
+                result = cli_obj.choice_type(input_value, choices)
                 assert False, f"For input '{input_value}' with choices {choices}, expected an error but got {result}"
             except argparse.ArgumentTypeError as e:
                 assert str(e) == f"'{input_value}' is not a valid choice."
         else:
-            result = cli_instance.choice_type(input_value, choices)
+            result = cli_obj.choice_type(input_value, choices)
             assert result == expected_output, f"For input '{input_value}' with choices {choices}, expected {expected_output} but got {result}"
+
+def test_custom_partial():
+    cli_obj = cli_handler.CLI("description")
+
+    def add(x, y):
+        return x + y
+
+    # create a partial function that binds the first argument to 2
+    add_two = cli_obj.custom_partial(add, x=2)
+
+    # call the partial function with the second argument
+    result = add_two(y=3)
+
+    # check if the result is as expected
+    assert result == 5, f"Expected 5 but got {result}"
+
+    # check if the name and docstring are retained
+    assert add_two.__name__ == "add", f"Expected name 'add' but got {add_two.__name__}"
+    assert add_two.__doc__ == add.__doc__, "Docstrings do not match"
+
 
 def test_cli_as_module(mock_os):
     # mock the values of os.path.basename, os.path.dirname, and os.path.split
@@ -247,7 +267,7 @@ def test_cli_as_module(mock_os):
     mock_os.path.dirname.return_value = "/path/to/module_directory"
     mock_os.path.split.return_value = ("/path/to", module)
     
-    cli_instance = cli_handler.CLI("description")
+    cli_obj = cli_handler.CLI("description")
     
-    assert cli_instance.name == module
+    assert cli_obj.name == module
 
