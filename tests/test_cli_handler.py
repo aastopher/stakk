@@ -162,21 +162,6 @@ def test_choice_func(capsys, monkeypatch):
     # test none list choice
     run_cli_parse({'command': 'choice_none_test', 'choice': [expected2]}, expected2)
 
-def test_bad_choice_func():
-    def choice_bad_test(choice: [1,'2',3]):
-        '''this is a test choice function'''
-        print(choice)
-        print("pass")
-
-    stack = meta_handler.Stack()
-    stack_id = 'test'
-    stack.add_func(stack_id, choice_bad_test)
-
-    cli_obj = cli_handler.CLI("description")
-
-    with pytest.raises(ValueError, match="all types in the choice list must match."):
-        cli_obj.add_funcs(stack.get_stack(stack_id))
-
 
 def test_list_func(capsys, monkeypatch):
     def list_test(test_list: list):
@@ -228,6 +213,32 @@ def test_type_list():
         result = cli_instance.type_list(input_str)
         assert result == expected_output, f"For input '{input_str}', expected {expected_output} but got {result}"
 
+def test_choice_type():
+    cli_instance = cli_handler.CLI("description")
+    
+    test_cases = [
+        # string choices
+        ("apple", ["apple", "banana", "cherry"], "apple"),
+        ("banana", ["apple", "banana", "cherry"], "banana"),
+        ("cherry", ["apple", "banana", "cherry"], "cherry"),
+        # mixed type choices
+        ("1", ["1", 2, 3.0], "1"),
+        (2, ["1", 2, 3.0], 2),
+        (3.0, ["1", 2, 3.0], 3.0),
+        # invalid choice
+        ("grape", ["apple", "banana", "cherry"], argparse.ArgumentTypeError),
+    ]
+
+    for input_value, choices, expected_output in test_cases:
+        if expected_output is argparse.ArgumentTypeError:
+            try:
+                result = cli_instance.choice_type(input_value, choices)
+                assert False, f"For input '{input_value}' with choices {choices}, expected an error but got {result}"
+            except argparse.ArgumentTypeError as e:
+                assert str(e) == f"'{input_value}' is not a valid choice."
+        else:
+            result = cli_instance.choice_type(input_value, choices)
+            assert result == expected_output, f"For input '{input_value}' with choices {choices}, expected {expected_output} but got {result}"
 
 def test_cli_as_module(mock_os):
     # mock the values of os.path.basename, os.path.dirname, and os.path.split

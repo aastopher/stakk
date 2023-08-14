@@ -1,4 +1,5 @@
 import inspect, os, argparse, sys, asyncio, re
+from functools import partial
 
 class CLI:
     """object designed for swift module CLI configuration"""
@@ -24,36 +25,39 @@ class CLI:
 
     @staticmethod
     def type_list(value):
+            '''custom type for list annotation'''
             return re.split(r'[;,| ]', value)
+
+    @staticmethod
+    def choice_type(value, choices):
+        """custom type for argparse for mapping types on provided choices."""
+        for choice in choices:
+            if choice == value or str(choice) == str(value):
+                return type(choice)(value)
+        raise argparse.ArgumentTypeError(f"'{value}' is not a valid choice.")
 
     def add_funcs(self, func_dict):
         """add registered functions to the cli"""
 
         def is_iterable(obj):
-            """Check if the object is an iterable."""
+            """check if the object is an iterable."""
             try:
                 iter(obj)
                 return True
             except TypeError:
                 return False
             
-        def get_type_from_choices(choices):
-            """parse the choice list to infer the type"""
-            
-            # if the list is empty, return None
-            if not choices:
-                return None
-            
-            # get the type of the first element
-            first_type = type(choices[0])
-            
-            # check if all elements are of the same type as the first element
-            if all(isinstance(elt, first_type) for elt in choices):
-                return first_type
-            else:
-                raise ValueError("all types in the choice list must match.")
+        def custom_partial(func, **kwargs):
+            """
+            custom partial function which retains the original 
+            function's name and doc string
+            """
+            partial_func = partial(func, **kwargs)
+            partial_func.__name__ = func.__name__
+            partial_func.__doc__ = func.__doc__
+            return partial_func
 
-                    
+             
         self.func_dict = func_dict  # assign function dictionary property
 
         # iterate through registered functions
@@ -81,8 +85,7 @@ class CLI:
                 # check if the annotation is an iterable
                 if is_iterable(param.annotation) and not isinstance(param.annotation, str):
                     choices = param.annotation
-                    inferred_type = get_type_from_choices(param.annotation)
-                    arg_type = inferred_type if inferred_type else str
+                    arg_type = custom_partial(self.choice_type, choices=choices)
                 elif param.annotation == list:
                     arg_type = self.type_list
                 else:
@@ -128,18 +131,18 @@ class CLI:
                 choices = None  # reset choices at the beginning of each iteration
                 if is_iterable(types.get(name, None)) and not isinstance(types.get(name, None), str):
                     choices = types[name]
-                    inferred_type = get_type_from_choices(types[name])
-                    arg_type = inferred_type if inferred_type else str
+                    arg_type = custom_partial(self.choice_type, choices=types[name])
                 elif types.get(name, None) == list:
                     arg_type = self.type_list
 
                 help_string = ""
-                if arg_type:
-                    help_string += f"type: {arg_type.__name__ if hasattr(arg_type, '__name__') else arg_type}"
                 if choices:
-                    if help_string:
-                        help_string += ", "
                     help_string += f"choices: ({', '.join(map(str, choices))})"
+                else:
+                    if arg_type == self.type_list:
+                        help_string += "type: list"
+                    elif arg_type != None:
+                        help_string += f"type: {arg_type.__name__ if hasattr(arg_type, '__name__') else arg_type}"
                 if name in defaults:
                     if help_string:
                         help_string += ", "
