@@ -1,11 +1,11 @@
-Welcome to stack's documentation!
+Welcome to stakk's documentation!
 ===================================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   stack
+   stakk
    usage
    helpers
 

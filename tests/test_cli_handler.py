@@ -1,7 +1,7 @@
 from unittest.mock import patch, Mock
 import pytest
 import sys, argparse, asyncio
-from stack import cli_handler, meta_handler
+from stakk import cli_handler, meta_handler
 
 #### FIXTURES
 
@@ -19,13 +19,13 @@ def test_cli_desc(capsys, monkeypatch):
     ) -> str:
         pass # pass since we are only testing the function description
     
-    stack = meta_handler.Stack()
+    stakk = meta_handler.Stack()
     stack_id = 'test'
-    stack.add_func(stack_id, func_test)
+    stakk.add_func(stack_id, func_test)
 
     expected = "Test CLI"
     cli_obj = cli_handler.CLI(expected)
-    cli_obj.add_funcs(stack.get_stack(stack_id))
+    cli_obj.add_funcs(stakk.get_stack(stack_id))
 
     monkeypatch.setattr(sys, "exit", lambda x: None)
 
@@ -47,13 +47,13 @@ def test_cli_add_funcs(monkeypatch):
     namespace = argparse.Namespace(command="func_test", help=True, x=1, y=2, c="+")
 
     with patch(
-        "stack.cli_handler.argparse.ArgumentParser.parse_args", return_value=namespace
+        "stakk.cli_handler.argparse.ArgumentParser.parse_args", return_value=namespace
     ):
         cli_obj = cli_handler.CLI("description")
-        stack = meta_handler.Stack()
+        stakk = meta_handler.Stack()
         stack_id = 'test'
-        stack.add_func(stack_id, func_test)
-        cli_obj.add_funcs(stack.get_stack(stack_id))
+        stakk.add_func(stack_id, func_test)
+        cli_obj.add_funcs(stakk.get_stack(stack_id))
 
         monkeypatch.setattr(sys, "exit", lambda *args: None)
 
@@ -66,12 +66,12 @@ def test_async_func(capsys, monkeypatch):
         await asyncio.sleep(0.1)
         print('pass')
 
-    stack = meta_handler.Stack()
+    stakk = meta_handler.Stack()
     stack_id = 'test'
-    stack.add_func(stack_id, func_test)
+    stakk.add_func(stack_id, func_test)
 
     cli_obj = cli_handler.CLI("description")
-    cli_obj.add_funcs(stack.get_stack(stack_id))
+    cli_obj.add_funcs(stakk.get_stack(stack_id))
 
     monkeypatch.setattr(sys, "exit", lambda *args: None)
 
@@ -91,12 +91,12 @@ def test_variadic_func(capsys, monkeypatch):
     def func_test(*args, **kwargs):
         return 'pass'
 
-    stack = meta_handler.Stack()
+    stakk = meta_handler.Stack()
     stack_id = 'test'
-    stack.add_func(stack_id, func_test)
+    stakk.add_func(stack_id, func_test)
 
     cli_obj = cli_handler.CLI("description")
-    cli_obj.add_funcs(stack.get_stack(stack_id))
+    cli_obj.add_funcs(stakk.get_stack(stack_id))
 
     monkeypatch.setattr(sys, "exit", lambda *args: None)
 
@@ -132,13 +132,13 @@ def test_choice_func(capsys, monkeypatch):
 
     expected1 = 1
     expected2 = None
-    stack = meta_handler.Stack()
+    stakk = meta_handler.Stack()
     stack_id = 'test'
-    stack.add_func(stack_id, choice_test)
-    stack.add_func(stack_id, choice_none_test)
+    stakk.add_func(stack_id, choice_test)
+    stakk.add_func(stack_id, choice_none_test)
 
     cli_obj = cli_handler.CLI("description")
-    cli_obj.add_funcs(stack.get_stack(stack_id))
+    cli_obj.add_funcs(stakk.get_stack(stack_id))
 
     monkeypatch.setattr(sys, "exit", lambda *args: None)
 
@@ -171,12 +171,12 @@ def test_list_func(capsys, monkeypatch):
 
     list_input = 'test,list,input'
     expected = "['test,list,input']"
-    stack = meta_handler.Stack()
+    stakk = meta_handler.Stack()
     stack_id = 'test'
-    stack.add_func(stack_id, list_test)
+    stakk.add_func(stack_id, list_test)
 
     cli_obj = cli_handler.CLI("description")
-    cli_obj.add_funcs(stack.get_stack(stack_id))
+    cli_obj.add_funcs(stakk.get_stack(stack_id))
 
     monkeypatch.setattr(sys, "exit", lambda *args: None)
 

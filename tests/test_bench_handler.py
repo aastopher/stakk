@@ -1,5 +1,5 @@
-import stack
-from stack import bench_handler
+import stakk
+from stakk import bench_handler
 import asyncio
 
 
@@ -9,25 +9,25 @@ def test_benchy_and_register():
     benchy = bench_handler.Benchy()
     stack_id = 'test'
 
-    @stack.register(stack_id)
+    @stakk.register(stack_id)
     @benchy
     def func_add(x: int, y: int) -> int:
         """this is a test function"""
         return x + y
 
     @benchy
-    @stack.register(stack_id)
+    @stakk.register(stack_id)
     def func_minus(x: int, y: int) -> int:
         """this is a test function"""
         return x - y
     
     @benchy
-    @stack.register(stack_id)
+    @stakk.register(stack_id)
     def func_data(data: list) -> list:
         """this is a test function"""
         return data
     
-    @stack.register(stack_id)
+    @stakk.register(stack_id)
     @benchy
     async def async_test():
         '''this is a test async function'''
@@ -47,11 +47,11 @@ def test_benchy_and_register():
     assert "async_test" in benchy.report
 
     # assert that functions were registered
-    assert "func_add" in stack.stack.get_stack(stack_id)
-    assert "func_minus" in stack.stack.get_stack(stack_id)
-    assert "func_data" in stack.stack.get_stack(stack_id)
-    assert "async_test" in stack.stack.get_stack(stack_id)
+    assert "func_add" in stakk.stack.get_stack(stack_id)
+    assert "func_minus" in stakk.stack.get_stack(stack_id)
+    assert "func_data" in stakk.stack.get_stack(stack_id)
+    assert "async_test" in stakk.stack.get_stack(stack_id)
 
     # clear global registers
-    stack.benchy.report = {}
-    stack.stack.funcs = {}
+    stakk.benchy.report = {}
+    stakk.stack.funcs = {}

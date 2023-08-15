@@ -17,7 +17,7 @@ sys.path.insert(0, grandparent_dir)
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'stack'
+project = 'stakk'
 copyright = '2023, Aaron Stopher'
 author = 'Aaron Stopher'
 

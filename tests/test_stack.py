@@ -1,11 +1,10 @@
 from unittest.mock import patch
 import inspect, sys, argparse
-import stack
+import stakk
 
 ##### Methods
 
-# Test 1: this should test the register decorator from stack
-# the result should be that the stack.Stack contains a dictionary for the functions meta info
+# Test 1: this should test the register decorator from stakk
 def test_register():
     def _get_defaults(func):
         """helper function to collect default func args"""
@@ -23,7 +22,7 @@ def test_register():
 
     stack_id = 'test'
 
-    @stack.register(stack_id)
+    @stakk.register(stack_id)
     def func_test(x: int, y: int) -> int:
         """this is a test function"""
         return x + y
@@ -41,11 +40,10 @@ def test_register():
                                         'variadic':False,
                                         'stack':stack_id}}
 
-    assert expected_dict == stack.stack.get_stack(stack_id)
+    assert expected_dict == stakk.stack.get_stack(stack_id)
 
 
-# Test 2: this should test the register decorator from stack
-# the result should be that the stack.Stack contains a proper function dict for variadic functions
+# Test 2: this should test the register decorator from stakk for variadic functions
 def test_register_variadic():
     def _get_meta(func):
         '''helper function to collect default func args'''
@@ -75,7 +73,7 @@ def test_register_variadic():
     
     stack_id = 'test'
 
-    @stack.register(stack_id)
+    @stakk.register(stack_id)
     def func_test(*args, **kwargs):
         """this is a test function"""
         return args, kwargs
@@ -90,23 +88,21 @@ def test_register_variadic():
                                         'variadic':variadic,
                                         'stack':stack_id}}
 
-    assert expected_dict == stack.stack.get_stack(stack_id)
+    assert expected_dict == stakk.stack.get_stack(stack_id)
 
 
-# Test 3: this should test the cli from stack
-# the result should be that the cli property is not None in stack.Stack
-# the cli object should contain commands for any registered functions
+# Test 3: this should test the cli from stakk
 def test_cli(monkeypatch):
     # patch the input namespace with the desired command
     namespace = argparse.Namespace(command="", help=True)
     stack_id = 'test'
 
     with patch(
-        "stack.cli_handler.argparse.ArgumentParser.parse_args", return_value=namespace
+        "stakk.cli_handler.argparse.ArgumentParser.parse_args", return_value=namespace
     ):
         # patch the sys.exit function so it doesn't exit the interpreter during the test
         monkeypatch.setattr(sys, "exit", lambda *args: None)
 
-        stack.cli(stack_id)
+        stakk.cli(stack_id)
 
-    assert stack.stack.cli is not None
+    assert stakk.stack.cli is not None

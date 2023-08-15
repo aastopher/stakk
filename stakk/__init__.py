@@ -1,4 +1,4 @@
-from stack import cli_handler, meta_handler, bench_handler
+from stakk import cli_handler, meta_handler, bench_handler
 
 # init stack
 stack = meta_handler.Stack()
@@ -6,7 +6,7 @@ benchy = bench_handler.Benchy()
 
 
 def register(stack_id: str):
-    '''register a function to the stack with a stack name
+    '''register a function to a stack with a stack name
     
     :param stack_id: stack identifier to register function with
     '''
@@ -18,7 +18,7 @@ def register(stack_id: str):
 
 
 def cli(stack_id: str, desc : str = None):
-    '''init cli and register to stack
+    '''init cli and register to a stack
     
     :param stack_id: stack identifier to register to CLI
     :param desc: description of the CLI

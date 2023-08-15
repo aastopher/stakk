@@ -1,22 +1,22 @@
 [![Documentation Status](https://readthedocs.org/projects/stackdocs/badge/?version=latest)](https://stackdocs.readthedocs.io/en/latest/?badge=latest)
-[![codecov](https://codecov.io/gh/aastopher/stack/branch/main/graph/badge.svg?token=6E9OZ92IER)](https://codecov.io/gh/aastopher/stack)
+[![codecov](https://codecov.io/gh/aastopher/stakk/branch/main/graph/badge.svg?token=6E9OZ92IER)](https://codecov.io/gh/aastopher/stack)
 [![DeepSource](https://app.deepsource.com/gh/aastopher/stack.svg/?label=active+issues&show_trend=true&token=Cb1BDZodMpRy6GmIyFkpYUPQ)](https://app.deepsource.com/gh/aastopher/stack/?ref=repository-badge)
 
 ## Description
 
-Stack is designed to stack functions into a register, the registered stack is designed to be consumed by a stack of modular utilities. This pattern is intended to facilitate a lower barrier for entry to configure command line interfaces, benchmark tasks, and manage threaded agents.
+Stakk is designed to stack functions into a register, the registered stack is designed to be consumed by a stack of modular utilities. This pattern is intended to facilitate a lower barrier for entry to configure command line interfaces, benchmark tasks, and manage threaded agents.
 ***
 
 ## Quick Start:
 
-## register functions with stack
+## register functions with stakk
 
-Using the register decorator `@stack.register('stack_id')` on your functions will register it with a stack in `meta_handler.Stack`. Functions in a stack are available for utilities to register and create a link to the stack.
+Using the register decorator `@stakk.register('stack_id')` on your functions will register it with a stack in `meta_handler.Stack`. Functions in a stack are available for utilities to register and create a link to the stack.
 
 ```python
-import stack
+import stakk
 
-@stack.register('stack_id')
+@stakk.register('stack_id')
 def add(x : int, y : int):
     '''add two integers'''
     return x + y
@@ -25,10 +25,10 @@ def add(x : int, y : int):
 You can also register async functions, these will be executed using `asyncio.run()` given a valid coroutine function.
 
 ```python
-import stack
+import stakk
 import asyncio
 
-@stack.register('stack_id')
+@stakk.register('stack_id')
 async def delay_add(x : int, y : int):
     '''add two integers after 1 sec'''
     await asyncio.sleep(1)
@@ -40,7 +40,7 @@ async def delay_add(x : int, y : int):
 It is suggested to define the command line interface after `if __name__ == '__main__'`. Any code before the cli will run even if a cli command is used; code after the cli definition will not run when passing a cli command. The cli initialization will require 1 argument a stack_id, optionally you can provide a description it is suggested to use doc strings for this and init as shown.
 
 ```python
-import stack
+import stakk
 
 # registered functions...
 
@@ -48,7 +48,7 @@ import stack
 
 if __name__ == '__main__':
     # main code (will run even when using cli commands)...
-    stack.cli(stack_id = 'stack_id', desc = __doc__) # desc is optional
+    stakk.cli(stack_id = 'stack_id', desc = __doc__) # desc is optional
     # main code (will NOT run when using cli commands)...
 ```
 
@@ -58,9 +58,9 @@ Adding a default value will create an optional arg for the command. The keyword 
 
 ```python
 """This module does random stuff."""
-import stack
+import stakk
 
-@stack.register('cli')
+@stakk.register('cli')
 def meet(name : str, greeting : str = 'hello', farewell : str = 'goodbye') -> str:
     '''meet a person'''
     return f'\n{greeting} {name}\n{farewell} {name}'
@@ -69,7 +69,7 @@ def meet(name : str, greeting : str = 'hello', farewell : str = 'goodbye') -> st
 
 if __name__ == '__main__':
     # main code (will run even when using cli commands)...
-    stack.cli(stack_id = 'cli', desc = __doc__)
+    stakk.cli(stack_id = 'cli', desc = __doc__)
     # main code (will NOT run when using cli commands)...
 ```
 
@@ -127,12 +127,12 @@ Adding an iterable as the type annotation will define a choices argument. A cust
 
 ```python
 """This module does random stuff."""
-import stack
+import stakk
 
 foo_choices = ['foo', 'fooo','foooo']
 bar_choices = ('bar', 1, 'baar', 2)
 
-@stack.register('cli')
+@stakk.register('cli')
 def foo_choices(foo: foo_choices, bar: bar_choices = 2) -> tuple:
     '''foo bar'''
     return foo, bar
@@ -141,7 +141,7 @@ def foo_choices(foo: foo_choices, bar: bar_choices = 2) -> tuple:
 
 if __name__ == '__main__':
     # main code (will run even when using cli commands)...
-    stack.cli(stack_id = 'cli', desc = __doc__)
+    stakk.cli(stack_id = 'cli', desc = __doc__)
     # main code (will NOT run when using cli commands)...
 ```
 
@@ -178,9 +178,9 @@ Using list as a type annotation has special context. This will prompt the cli to
 
 ```python
 """This module does random stuff."""
-import stack
+import stakk
 
-@stack.register('cli')
+@stakk.register('cli')
 def foo_lists(foo : list, bar : list = ['foo','bar']) -> tuple:
         return foo, bar
 
@@ -188,7 +188,7 @@ def foo_lists(foo : list, bar : list = ['foo','bar']) -> tuple:
 
 if __name__ == '__main__':
     # main code (will run even when using cli commands)...
-    stack.cli(stack_id = 'cli', desc = __doc__)
+    stakk.cli(stack_id = 'cli', desc = __doc__)
     # main code (will NOT run when using cli commands)...
 ```
 
@@ -221,15 +221,15 @@ options:
 
 ## cli - variadic functions
 
-Variadic functions are compatible with stack cli utility. When calling kwargs from the cli; `key=value` should be used instead of `--` and `-`, these are reserved for default arguments.
+Variadic functions are compatible with stakk cli utility. When calling kwargs from the cli; `key=value` should be used instead of `--` and `-`, these are reserved for default arguments.
 
 **NOTE:** providing type annotations will enforce type, however this will apply to all `*args` or `**kwargs`, if custom logic is needed you can create and pass a custom type function.
 
 ```python
 """This module does random stuff."""
-import stack
+import stakk
 
-@stack.register('cli')
+@stakk.register('cli')
 def variadic(*args: str, **kwargs: int):
     
     print("Positional arguments:")
@@ -246,7 +246,7 @@ def variadic(*args: str, **kwargs: int):
 
 if __name__ == '__main__':
     # main code (will run even when using cli commands)...
-    stack.cli(stack_id = 'cli', desc = __doc__)
+    stakk.cli(stack_id = 'cli', desc = __doc__)
     # main code (will NOT run when using cli commands)...
 ```
 
@@ -286,26 +286,26 @@ options:
 
 ## benchy - usage example
 
-The `benchy` decorator is designed to collect performance timing and call info for selected functions. This can be used in combination with `@stack.register`, the decorators are order independent.
+The `benchy` decorator is designed to collect performance timing and call info for selected functions. This can be used in combination with `@stakk.register`, the decorators are order independent.
 
 ```python
-import stack
+import stakk
 import asyncio
 
-@stack.benchy
-@stack.register('test_stack')
+@stakk.benchy
+@stakk.register('test_stack')
 def add(x : int, y : int):
     '''add two integers'''
     return x + y
 
-@stack.register('test_stack')
-@stack.benchy
+@stakk.register('test_stack')
+@stakk.benchy
 def subtract(x : int, y : int):
     '''subtract two integers'''
     return x - y
 
-@stack.benchy
-@stack.register('test_stack')
+@stakk.benchy
+@stakk.register('test_stack')
 def calc(x : int, y : int, atype : str = '+') -> int:
     '''calculates a thing'''
     if atype == '+':
@@ -314,8 +314,8 @@ def calc(x : int, y : int, atype : str = '+') -> int:
         res = subtract(x, y)
     return res
 
-@stack.register('test_stack')
-@stack.benchy
+@stakk.register('test_stack')
+@stakk.benchy
 async def async_example():
     '''An example async function'''
     await asyncio.sleep(1)
@@ -328,11 +328,11 @@ calc(2,3, atype='-')
 asyncio.get_event_loop().run_until_complete(async_example())
 ```
 
-After the functions have been executed, the benchmark report can be accessed with `stack.benchy.report`.
+After the functions have been executed, the benchmark report can be accessed with `stakk.benchy.report`.
 
 ```python
 # print the benchmark report
-print(stack.benchy.report)
+print(stakk.benchy.report)
 ```
 
 Example output:
