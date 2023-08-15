@@ -1,5 +1,6 @@
 [![Documentation Status](https://readthedocs.org/projects/stakk/badge/?version=latest)](https://stakk.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/aastopher/stakk/graph/badge.svg?token=3RSWSCO72X)](https://codecov.io/gh/aastopher/stakk)
+[![PyPI version](https://badge.fury.io/py/stakk.svg)](https://badge.fury.io/py/stakk)
 [![DeepSource](https://app.deepsource.com/gh/aastopher/stakk.svg/?label=active+issues&show_trend=true&token=QdzCwtyocLG_4fymZUbw1WX5)](https://app.deepsource.com/gh/aastopher/stakk/?ref=repository-badge)
 
 ## Description
