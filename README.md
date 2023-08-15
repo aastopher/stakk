@@ -4,7 +4,8 @@
 
 ## Description
 
-Stakk is designed to stack functions into a register, the registered stack is designed to be consumed by a stack of modular utilities. This pattern is intended to facilitate a lower barrier for entry to configure command line interfaces, benchmark tasks, and manage threaded agents.
+Register functions to a stack, each stack can be linked to modular utilities. The stakk pattern is intended to facilitate a lower barrier for entry to configure command line interfaces, benchmark tasks, and interact with threaded agents.
+
 ***
 
 ## Quick Start:
