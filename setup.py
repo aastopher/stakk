@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="stack",
-    version="0.0.1",
+    version="0.1.0",
     author="Aaron Stopher",
     packages=setuptools.find_packages(include=["stack"]),
     description="Stack is designed to stack functions into a register, this registered stack is designed to be consumed by a stack of modular utilities.",
