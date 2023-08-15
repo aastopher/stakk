@@ -1,17 +1,12 @@
 helper classes
 --------------
 
-.. autoclass:: stack.cli_handler.CLI
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-.. autoclass:: stack.log_handler.Logger
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 .. autoclass:: stack.meta_handler.Stack
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: stack.cli_handler.CLI
    :members:
    :undoc-members:
    :show-inheritance:

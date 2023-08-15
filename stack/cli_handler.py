@@ -41,13 +41,13 @@ class CLI:
         partial function wrapper which retains the original 
         function's name and doc string.
         """
-        def wrapped_func(*args, **kwargs):
+        def partial(*args, **kwargs):
             all_kwargs = {**partial_kwargs, **kwargs}
             return func(*args, **all_kwargs)
 
-        wrapped_func.__name__ = func.__name__
-        wrapped_func.__doc__ = func.__doc__
-        return wrapped_func
+        partial.__name__ = func.__name__
+        partial.__doc__ = func.__doc__
+        return partial
 
 
     def add_funcs(self, func_dict):
@@ -181,6 +181,10 @@ class CLI:
                 else:
                     # if variadic allow any number of args
                     if items['variadic']:
+                        if name == '*args':
+                            help_string = '       ex: command arg1 arg2'
+                        elif name == '**kwargs':
+                            help_string = '    ex: command key=value'
                         subp.add_argument(
                             name, nargs='*', 
                             type=arg_type, 
