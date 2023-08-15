@@ -169,7 +169,7 @@ def test_list_func(capsys, monkeypatch):
         print(test_list)
         print("pass")
 
-    input = 'test,list,input'
+    list_input = 'test,list,input'
     expected = "['test,list,input']"
     stack = meta_handler.Stack()
     stack_id = 'test'
@@ -195,7 +195,7 @@ def test_list_func(capsys, monkeypatch):
         assert expected in captured.out
 
     # test list
-    run_cli_parse({'command': 'list_test', 'test_list': [input]}, expected)
+    run_cli_parse({'command': 'list_test', 'test_list': [list_input]}, expected)
 
 def test_type_list():
     cli_obj = cli_handler.CLI("description")

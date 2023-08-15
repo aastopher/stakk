@@ -142,9 +142,9 @@ class CLI:
                 if choices:
                     help_string += f"choices: ({', '.join(map(str, choices))})"
                 else:
-                    if arg_type == self.type_list:
+                    if arg_type is self.type_list:
                         help_string += "type: list"
-                    elif arg_type != None:
+                    elif arg_type is not None:
                         help_string += f"type: {arg_type.__name__ if hasattr(arg_type, '__name__') else arg_type}"
                 if name in defaults:
                     if help_string:
