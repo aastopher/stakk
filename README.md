@@ -9,7 +9,7 @@ Stack is designed to stack functions into a register, the registered stack is de
 
 ## Quick Start:
 
-## Register functions with stack
+## register functions with stack
 
 Using the register decorator `@stack.register('stack_id')` on your functions will register it with a stack in `meta_handler.Stack`. Functions in a stack are available for utilities to register and create a link to the stack.
 
@@ -35,7 +35,7 @@ async def delay_add(x : int, y : int):
     return x + y
 ```
 
-## CLI - Initialization standard
+## cli - initialization standard
 
 It is suggested to define the command line interface after `if __name__ == '__main__'`. Any code before the cli will run even if a cli command is used; code after the cli definition will not run when passing a cli command. The cli initialization will require 1 argument a stack_id, optionally you can provide a description it is suggested to use doc strings for this and init as shown.
 
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     # main code (will NOT run when using cli commands)...
 ```
 
-## CLI - Args and optional args
+## cli - args and optional args
 
 Adding a default value will create an optional arg for the command. The keyword and default value will be displayed in the help docs along with the type if one is given.
 
@@ -121,7 +121,7 @@ options:
 -h, --help            Show this help message and exit.
 ```
 
-## CLI - Choice arguments
+## cli - choice arguments
 
 Adding an iterable as the type annotation will define a choices argument. A custom type checker is defined based on the option types in the iterable provided. This will allow you to define mixed types in your choices lists.
 
@@ -172,7 +172,7 @@ options:
 -h, --help          Show this help message and exit.
 ```
 
-## CLI - List annotation
+## cli - list annotation
 
 Using list as a type annotation has special context. This will prompt the cli to define a custom list type which returns `re.split(r'[;,| ]', value)`. This allows you to specify string with delimiters which are converted to lists before being passed to the function. You are welcome to create and pass your own type functions but lists are built in for ease of use.
 
@@ -219,7 +219,7 @@ options:
 -h, --help          Show this help message and exit.
 ```
 
-## CLI - Using variadic functions
+## cli - variadic functions
 
 Variadic functions are compatible with stack cli utility. When calling kwargs from the cli; `key=value` should be used instead of `--` and `-`, these are reserved for default arguments.
 
@@ -284,7 +284,7 @@ options:
 -h, --help  Show this help message and exit.
 ```
 
-## Benchy - Usage example
+## benchy - usage example
 
 The `benchy` decorator is designed to collect performance timing and call info for selected functions. This can be used in combination with `@stack.register`, the decorators are order independent.
 
