@@ -1,6 +1,6 @@
-[![Documentation Status](https://readthedocs.org/projects/stackdocs/badge/?version=latest)](https://stackdocs.readthedocs.io/en/latest/?badge=latest)
-[![codecov](https://codecov.io/gh/aastopher/stakk/branch/main/graph/badge.svg?token=6E9OZ92IER)](https://codecov.io/gh/aastopher/stack)
-[![DeepSource](https://app.deepsource.com/gh/aastopher/stack.svg/?label=active+issues&show_trend=true&token=Cb1BDZodMpRy6GmIyFkpYUPQ)](https://app.deepsource.com/gh/aastopher/stack/?ref=repository-badge)
+[![Documentation Status](https://readthedocs.org/projects/stakk/badge/?version=latest)](https://stakk.readthedocs.io/en/latest/?badge=latest)
+[![codecov](https://codecov.io/gh/aastopher/stakk/graph/badge.svg?token=3RSWSCO72X)](https://codecov.io/gh/aastopher/stakk)
+[![DeepSource](https://app.deepsource.com/gh/aastopher/stakk.svg/?label=active+issues&show_trend=true&token=QdzCwtyocLG_4fymZUbw1WX5)](https://app.deepsource.com/gh/aastopher/stakk/?ref=repository-badge)
 
 ## Description
 
