@@ -5,7 +5,7 @@ import stack
 ##### Methods
 
 # Test 1: this should test the register decorator from stack
-# the result should be that the stack.store contains a dictionary for the functions meta info
+# the result should be that the stack.Stack contains a dictionary for the functions meta info
 def test_register():
     def _get_defaults(func):
         """helper function to collect default func args"""
@@ -21,7 +21,9 @@ def test_register():
 
         return defaults
 
-    @stack.register
+    stack_id = 'test'
+
+    @stack.register(stack_id)
     def func_test(x: int, y: int) -> int:
         """this is a test function"""
         return x + y
@@ -36,13 +38,14 @@ def test_register():
                                         'types':types, 
                                         'defaults':defaults, 
                                         'desc':desc, 
-                                        'variadic':False}}
+                                        'variadic':False,
+                                        'stack':stack_id}}
 
-    assert expected_dict == stack.store.funcs
+    assert expected_dict == stack.stack.get_stack(stack_id)
 
 
 # Test 2: this should test the register decorator from stack
-# the result should be that the su.store contains a proper function dict for variadic functions
+# the result should be that the stack.Stack contains a proper function dict for variadic functions
 def test_register_variadic():
     def _get_meta(func):
         '''helper function to collect default func args'''
@@ -69,8 +72,10 @@ def test_register_variadic():
         desc = func.__doc__
 
         return names, types, defaults, desc, variadic
+    
+    stack_id = 'test'
 
-    @stack.register
+    @stack.register(stack_id)
     def func_test(*args, **kwargs):
         """this is a test function"""
         return args, kwargs
@@ -82,17 +87,19 @@ def test_register_variadic():
                                         'types':types, 
                                         'defaults':defaults, 
                                         'desc':desc, 
-                                        'variadic':variadic}}
+                                        'variadic':variadic,
+                                        'stack':stack_id}}
 
-    assert expected_dict == stack.store.funcs
+    assert expected_dict == stack.stack.get_stack(stack_id)
 
 
 # Test 3: this should test the cli from stack
-# the result should be that the cli property is not None in stack.store
+# the result should be that the cli property is not None in stack.Stack
 # the cli object should contain commands for any registered functions
 def test_cli(monkeypatch):
     # patch the input namespace with the desired command
     namespace = argparse.Namespace(command="", help=True)
+    stack_id = 'test'
 
     with patch(
         "stack.cli_handler.argparse.ArgumentParser.parse_args", return_value=namespace
@@ -100,6 +107,6 @@ def test_cli(monkeypatch):
         # patch the sys.exit function so it doesn't exit the interpreter during the test
         monkeypatch.setattr(sys, "exit", lambda *args: None)
 
-        stack.cli()
+        stack.cli(stack_id)
 
-    assert stack.store.cli is not None
+    assert stack.stack.cli is not None

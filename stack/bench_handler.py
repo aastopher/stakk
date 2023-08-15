@@ -1,4 +1,5 @@
 import time
+import asyncio
 
 class Benchy:
     '''decorator class for collecting benchmark reports'''
@@ -28,28 +29,52 @@ class Benchy:
         # collect original function if already wrapped
         original_func = getattr(func, "__wrapped__", func)
 
-        def wrapper(*args, **kwargs):
+        if asyncio.iscoroutinefunction(original_func):
+            async def async_wrapper(*args, **kwargs):
+                start_time = time.perf_counter()
+                result = await original_func(*args, **kwargs)
+                end_time = time.perf_counter()
+                elapsed_time = end_time - start_time
 
-            # benchmark the function
-            start_time = time.perf_counter()
-            result = original_func(*args, **kwargs)
-            end_time = time.perf_counter()
-            elapsed_time = end_time - start_time
+                # check if report exists for func
+                if original_func.__name__ not in self.report:
+                    self.report[original_func.__name__] = []
 
-            # check if report exists for func
-            if original_func.__name__ not in self.report:
-                self.report[original_func.__name__] = []
+                # collect benchmark, args, kwargs, results summaries
+                self.report[original_func.__name__].append({
+                    'benchmark': elapsed_time,
+                    'args': self.func_meta(args),
+                    'kwargs': self.func_meta(kwargs),
+                    'result': self.summarize(result)
+                })
 
-            # collect benchmark, args, kwargs, results summaries
-            self.report[original_func.__name__].append({
-                'benchmark': elapsed_time,
-                'args': self.func_meta(args),
-                'kwargs': self.func_meta(kwargs),
-                'result': self.summarize(result)
-            })
+                return result
 
-            return result
+            # re-wrap original async function
+            async_wrapper.__wrapped__ = original_func
+            return async_wrapper
 
-        # re-wrap original function
-        wrapper.__wrapped__ = original_func
-        return wrapper
+        else:
+            def wrapper(*args, **kwargs):
+                start_time = time.perf_counter()
+                result = original_func(*args, **kwargs)
+                end_time = time.perf_counter()
+                elapsed_time = end_time - start_time
+
+                # check if report exists for func
+                if original_func.__name__ not in self.report:
+                    self.report[original_func.__name__] = []
+
+                # collect benchmark, args, kwargs, results summaries
+                self.report[original_func.__name__].append({
+                    'benchmark': elapsed_time,
+                    'args': self.func_meta(args),
+                    'kwargs': self.func_meta(kwargs),
+                    'result': self.summarize(result)
+                })
+
+                return result
+            
+            # re-wrap original function
+            wrapper.__wrapped__ = original_func
+            return wrapper

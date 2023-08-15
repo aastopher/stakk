@@ -20,7 +20,6 @@ sys.path.insert(0, grandparent_dir)
 project = 'stack'
 copyright = '2023, Aaron Stopher'
 author = 'Aaron Stopher'
-release = '0.0.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
